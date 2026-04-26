@@ -1,0 +1,226 @@
+# 📄 Fertilizer Recommendation API — Requirements Document
+
+## 1. Overview
+
+The Fertilizer Recommendation API is designed to provide intelligent, data-driven fertilizer suggestions for crops based on soil conditions, environmental factors, and farming practices. The system uses Machine Learning combined with rule-based agricultural logic to ensure practical and accurate recommendations.
+
+---
+
+## 2. Objectives
+
+* Predict optimal **N (Nitrogen), P (Phosphorus), K (Potassium)** requirements
+* Identify **nutrient deficiency risks**
+* Suggest **optimal fertilizer application timing**
+* Provide scalable API support for integration into web/mobile farming applications
+
+---
+
+## 3. Input Requirements
+
+### 3.1 Crop Information
+
+* `crop_type` (e.g., Wheat, Rice, Maize, Cotton)
+* `growth_stage` (Seedling, Vegetative, Flowering, Fruiting)
+
+### 3.2 Soil Data
+
+* `soil_n` (Nitrogen content)
+* `soil_p` (Phosphorus content)
+* `soil_k` (Potassium content)
+* `soil_ph`
+* `organic_matter` (optional)
+* `soil_health_score` (optional composite metric)
+
+### 3.3 Environmental Data
+
+* `temperature` (°C)
+* `rainfall` (mm)
+* `humidity` (recommended)
+* `weather_forecast` (optional future data)
+
+### 3.4 Farming Practices
+
+* `irrigation_type` (Drip, Flood, Sprinkler)
+* `previous_crop` (optional)
+
+---
+
+## 4. Output Requirements
+
+### 4.1 Primary Outputs
+
+* `recommended_N`
+* `recommended_P`
+* `recommended_K`
+
+### 4.2 Risk Assessment
+
+* `nutrient_deficiency_risk` (Low / Medium / High)
+* Optional:
+
+  * Nitrogen deficiency risk
+  * Phosphorus deficiency risk
+  * Potassium deficiency risk
+
+### 4.3 Timing Recommendation
+
+* `application_time_window`
+
+  * Example: “Apply within next 5–7 days”
+  * Stage-based recommendation (e.g., “Before flowering stage”)
+
+---
+
+## 5. Machine Learning Requirements
+
+### 5.1 Problem Type
+
+* Regression → Predict N, P, K values
+* Classification → Predict deficiency risks
+
+### 5.2 Model Choices
+
+* Baseline: Random Forest
+* Advanced: XGBoost / LightGBM
+* Optional: Neural Networks (if large dataset available)
+
+### 5.3 Feature Engineering
+
+* Encode categorical variables (crop, stage, irrigation)
+* Normalize numerical inputs
+* Derived features:
+
+  * NPK ratios
+  * Rainfall trends
+  * Soil fertility index
+
+---
+
+## 6. Dataset Requirements
+
+### 6.1 Data Types Needed
+
+* Soil nutrient datasets
+* Crop-specific fertilizer recommendations
+* Weather and environmental datasets
+* Yield and productivity data
+
+### 6.2 Suggested Sources
+
+* ICAR (Indian Council of Agricultural Research)
+* Government agriculture portals
+* FAO soil database
+* Kaggle datasets (crop recommendation datasets)
+
+---
+
+## 7. API Design
+
+### 7.1 Endpoint
+
+POST `/predict-fertilizer`
+
+### 7.2 Request Format
+
+```json
+{
+  "crop_type": "Wheat",
+  "growth_stage": "Vegetative",
+  "soil_n": 45,
+  "soil_p": 30,
+  "soil_k": 20,
+  "ph": 6.5,
+  "temperature": 28,
+  "rainfall": 120,
+  "irrigation_type": "Drip"
+}
+```
+
+### 7.3 Response Format
+
+```json
+{
+  "recommended_N": 60,
+  "recommended_P": 40,
+  "recommended_K": 30,
+  "deficiency_risk": "Medium",
+  "application_time": "Apply within next 5 days"
+}
+```
+
+---
+
+## 8. Backend Requirements
+
+### 8.1 Technology Stack
+
+* FastAPI (preferred)
+* Python (ML + API)
+* Scikit-learn / XGBoost
+
+### 8.2 Core Components
+
+* Input validation module
+* Data preprocessing pipeline
+* Model inference engine
+* Post-processing (rule-based corrections)
+
+---
+
+## 9. Deployment Requirements
+
+* Docker containerization (optional)
+* Cloud deployment (AWS / GCP / Azure)
+* Model versioning and updates
+
+---
+
+## 10. Validation & Error Handling
+
+* Handle missing or null values
+* Validate ranges (e.g., pH between 0–14)
+* Reject invalid crop types
+* Ensure realistic environmental inputs
+
+---
+
+## 11. Advanced Features (Future Scope)
+
+* Real-time weather API integration
+* Soil sensor (IoT) integration
+* Multi-language support
+* Personalized farmer recommendations
+* Region-specific fertilizer guidelines
+
+---
+
+## 12. System Architecture
+
+User Application
+↓
+API Layer (FastAPI)
+↓
+Preprocessing Layer
+↓
+Machine Learning Model
+↓
+Post-processing (rules + timing logic)
+↓
+Response Output
+
+---
+
+## 13. Key Considerations
+
+* Combine **Machine Learning + Agricultural Rules**
+* Ensure dataset quality and diversity
+* Optimize for low-latency API responses
+* Maintain scalability for multiple users
+
+---
+
+## 14. Conclusion
+
+This API aims to provide an intelligent, scalable, and practical fertilizer recommendation system that can be integrated into modern agricultural applications to support farmers in making data-driven decisions.
+
+---
